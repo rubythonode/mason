@@ -71,6 +71,8 @@ function mason_compile {
         echo "CUSTOM_CXXFLAGS = '${CXXFLAGS}'" >> config.py
     fi
 
+    RESULT=0
+
     ./configure \
         CXX="${CXX}" \
         CC="${CC}" \
@@ -114,9 +116,14 @@ function mason_compile {
         DEMO=False \
         XMLPARSER="ptree" \
         NO_ATEXIT=True \
-        SVG2PNG=True || cat ${MASON_BUILD_PATH}"/config.log"
+        SVG2PNG=True || RESULT=$?
 
-    cat config.py
+    # if configure failed, dump out config details before exiting
+    if [[ ${RESULT} != 0 ]]; then
+        cat ${MASON_BUILD_PATH}"/config.log"
+        cat config.py
+        false # then fail
+    fi
 
     # limit concurrency on travis to avoid heavy jobs being killed
     if [[ ${TRAVIS_OS_NAME:-} ]]; then
