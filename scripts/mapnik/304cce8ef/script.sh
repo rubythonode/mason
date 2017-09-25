@@ -61,7 +61,7 @@ function mason_compile {
 
     # The mapnik configure check for c++14 fails when mason hardcodes c++11 in the CXXFLAGS
     # So we remove it here
-    # export CXXFLAGS="${CXXFLAGS//-std=c++11}"
+    export CXXFLAGS="${CXXFLAGS//-std=c++11}"
 
     if [[ $(uname -s) == 'Linux' ]]; then
         echo "CUSTOM_LDFLAGS = '${LDFLAGS} -Wl,-z,origin -Wl,-rpath=\\\$\$ORIGIN/../lib/ -Wl,-rpath=\\\$\$ORIGIN/../../'" > config.py
